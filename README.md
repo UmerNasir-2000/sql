@@ -27,13 +27,13 @@ docker container prune
 For copying the `schema.sql` file to the container:
 
 ```bash
-docker cp schema.sql mysql_container:/
+docker cp <path.sql> mysql-container:/
 ```
 
 For executing the `schema.sql` file inside the container:
 
 ```bash
-docker exec -it mysql_container bash -c 'mysql -u root -p < /schema.sql'
+docker exec -it mysql-container bash -c 'mysql -u root -p < /schema.sql'
 ```
 
 ## SQL (MySQL Shell) 🐚
