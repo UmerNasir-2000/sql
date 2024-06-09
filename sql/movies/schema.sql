@@ -56,7 +56,7 @@ INSERT INTO reviewers (`first_name`, `last_name`) VALUES
 ('Pinkie', 'Petit'),
 ('Marlon', 'Crafford');
 
-INSERT INTO reviews(series_id, reviewer_id, rating) VALUES
+INSERT INTO reviews(`series_id`, `reviewer_id`, `rating`) VALUES
 (1,1,8.0),(1,2,7.5),(1,3,8.5),(1,4,7.7),(1,5,8.9),
 (2,1,8.1),(2,4,6.0),(2,3,8.0),(2,6,8.4),(2,5,9.9),
 (3,1,7.0),(3,6,7.5),(3,4,8.0),(3,3,7.1),(3,5,8.0),
@@ -69,3 +69,92 @@ INSERT INTO reviews(series_id, reviewer_id, rating) VALUES
 (10,5,9.9),
 (13,3,8.0),(13,4,7.2),
 (14,2,8.5),(14,3,8.9),(14,4,8.9);
+
+-- Querying Data
+
+-- 1. Find all the ratings for all shows which are rated.
+
+SELECT 
+    s.title, 
+    r.rating
+FROM series s
+INNER JOIN reviews r
+ON s.id = r.series_id
+
+-- 2. Find the average ratings for all shows which are rated.
+
+SELECT 
+    s.title, 
+    ROUND(AVG(r.rating), 1) as `average_rating`
+FROM series s
+INNER JOIN reviews r
+ON s.id = r.series_id
+GROUP BY 1
+ORDER BY 2 DESC;
+
+-- 3. Find the rating of all reviewers.
+
+SELECT 
+    re.first_name,
+    re.last_name,
+    rv.rating
+FROM reviewers re
+INNER JOIN reviews rv 
+ON re.id = rv.reviewer_id
+
+-- 4. Find the titles of the series which are not reviewed yet.
+
+SELECT 
+    s.title AS `unreviewed_series`
+FROM series s
+LEFT JOIN reviews r ON s.id = r.series_id
+WHERE r.series_id IS NULL;
+
+-- Alternatively, this can also be done with subquery
+
+SELECT 
+    s.title AS `unreviewed_series`
+FROM series s
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM reviews r
+    WHERE s.id = r.series_id
+);
+
+-- 5. Find the average rating of each genre
+
+SELECT 
+    s.genre,
+    ROUND(AVG(r.rating), 1) as `avg_rating`
+FROM series s
+INNER JOIN reviews r
+ON s.id = r.series_id
+GROUP BY 1
+ORDER BY 2 DESC;
+
+-- 6. Find the count, min, max, avg and status of each reviewer
+
+SELECT 
+    re.first_name,
+    re.last_name,
+    COUNT(rv.reviewer_id) as `COUNT`,
+    IFNULL(ROUND(MIN(rv.rating), 2), 0.0) as `MIN`,
+    IFNULL(ROUND(MAX(rv.rating), 2), 0.0) as `MAX`,
+    IFNULL(ROUND(AVG(rv.rating), 2), 0.0) as `AVG`,
+    IF(COUNT(rv.reviewer_id) = 0, 'INACTIVE', 'ACTIVE') as `STATUS`
+FROM reviewers re
+LEFT JOIN reviews rv
+ON re.id = rv.reviewer_id
+GROUP BY rv.reviewer_id, re.first_name, re.last_name;
+
+-- 7. Find all the ratings for each series by every review
+
+SELECT
+    s.title,
+    rv.rating,
+    CONCAT(re.first_name, ' ', re.last_name) AS `reviewer`
+FROM series s
+INNER JOIN reviews rv
+ON s.id = rv.series_id
+INNER JOIN reviewers re
+ON re.id = rv.reviewer_id;
