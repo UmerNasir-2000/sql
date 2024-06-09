@@ -50,3 +50,72 @@ FROM students s
 INNER JOIN papers p
 ON s.id = p.student_id
 ORDER BY p.grade DESC;
+
+-- 2. Find all the students with their papers.
+
+SELECT 
+    s.first_name,
+    p.title,
+    p.grade
+FROM students s
+LEFT JOIN papers p
+ON s.id = p.student_id;
+
+/*
+-- 3. Find all the students with their papers and if any student 
+has not given the paper then should be printed MISSING for title and 0 for grade.
+*/
+
+SELECT 
+    s.first_name,
+    IFNULL(p.title, 'MISSING') AS title,
+    IFNULL(p.grade, 0) AS grade
+FROM students s
+LEFT JOIN papers p
+ON s.id = p.student_id;
+
+-- Alternatively, `COALESCE` statement
+
+ can also be used instead of `IFNULL` function
+
+SELECT 
+    s.first_name,
+    COALESCE(p.title, 'MISSING') AS title,
+    COALESCE(p.grade, 0) AS grade
+FROM students s
+LEFT JOIN papers p ON s.id = p.student_id;
+
+-- 4. Find the average grade of all students
+
+SELECT 
+    s.first_name,
+    IFNULL(ROUND(AVG(p.grade), 2), 0) AS `average_grade`
+FROM students s
+LEFT JOIN papers p
+ON s.id = p.student_id
+GROUP BY 1;
+
+-- 5. Find the average grade of all students with a passing status.
+
+SELECT 
+    s.first_name,
+    IFNULL(ROUND(AVG(p.grade), 2), 0) AS `average_grade`,
+    CASE
+        WHEN IFNULL(ROUND(AVG(p.grade), 2), 0) > 60 THEN 'PASSING'
+        ELSE 'FAILING'
+    END AS `passing_status`    
+FROM students s
+LEFT JOIN papers p
+ON s.id = p.student_id
+GROUP BY 1;
+
+-- Alternatively, `IF` function can also be used instead of `CASE` statement
+
+SELECT 
+    s.first_name,
+    IFNULL(ROUND(AVG(p.grade), 2), 0) AS `average_grade`,
+    IF(IFNULL(ROUND(AVG(p.grade), 2), 0) > 60, 'PASSING', 'FAILING') AS `passing_status`
+FROM students s
+LEFT JOIN papers p 
+ON s.id = p.student_id
+GROUP BY 1;
