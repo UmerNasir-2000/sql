@@ -36,3 +36,17 @@ INSERT INTO papers (student_id, title, grade) VALUES
 (2, 'Russian Lit Through The Ages', 94),
 (2, 'De Montaigne and The Art of The Essay', 98),
 (2, 'Borges and Magical Realism', 89);
+
+
+-- Querying Data
+
+-- 1. Find the grades and titles of students who have submitted papers.
+
+SELECT 
+    s.first_name, 
+    p.title, 
+    p.grade
+FROM students s
+INNER JOIN papers p
+ON s.id = p.student_id
+ORDER BY p.grade DESC;
