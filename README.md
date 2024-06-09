@@ -24,6 +24,18 @@ For removing all the stopped containers:
 docker container prune
 ```
 
+For copying the `schema.sql` file to the container:
+
+```bash
+docker cp schema.sql mysql_container:/
+```
+
+For executing the `schema.sql` file inside the container:
+
+```bash
+docker exec -it mysql_container bash -c 'mysql -u root -p < /schema.sql'
+```
+
 ## SQL (MySQL Shell) 🐚
 
 1. For listing all the databases:
