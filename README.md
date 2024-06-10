@@ -101,3 +101,24 @@ dotnet ef migrations add <MigrationName>
 ```bash
 dotnet ef database update
 ```
+
+5. For adding environment variables:
+
+```bash
+export SQL_UNIVERSITY_DB="server=localhost;user=root;password=root;database=sql_university"
+```
+
+```powershell
+setx SQL_UNIVERSITY_DB "server=localhost;user=root;password=root;database=sql_university"
+```
+6. For running the project:
+
+```bash
+dotnet run
+```
+
+7. For running in watch mode:
+
+```bash
+dotnet watch run
+```
