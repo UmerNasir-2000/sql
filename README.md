@@ -73,3 +73,31 @@ SELECT DATABASE();
 ```sql
 SELECT USER();
 ```
+## .NET 8.0 🚀 + EF Core
+
+1. For creating a new console project:
+
+```bash
+dotnet new console -n <project_name>
+```
+
+2. For adding the `EF Core` package:
+
+```bash
+dotnet tool install --global dotnet-ef
+dotnet add package Microsoft.EntityFrameworkCore
+dotnet add package Pomelo.EntityFrameworkCore.MySql
+dotnet add package Microsoft.EntityFrameworkCore.Design
+```
+
+3. For creating migrations:
+
+```bash
+dotnet ef migrations add <MigrationName>
+```
+
+4. For updating the database:
+
+```bash
+dotnet ef database update
+```
